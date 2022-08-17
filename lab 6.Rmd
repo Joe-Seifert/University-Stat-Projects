@@ -1,0 +1,191 @@
+---
+title: "lab 6"
+author: "Joe Seifert"
+date: "2/15/2021"
+output: pdf_document
+---
+
+```{r}
+#problem 1: guided example
+#1a
+#converge to truth and have low variability --> consistent
+
+#we first show that the estimator is
+#unbiased for the parameter it is
+#predicting --> the expectaiton of the
+#estimator should equal the parameter
+
+#we then show that, as n approaches infinity,
+#the variance of the estimator approaches
+#0.  Since the variance of the estimator is the
+#variance of the parameter divided by n, the limit will
+#converge to 0 as long as the numerator (variance of the
+#parameter) is finite when the limit is applied to it
+
+
+#1b
+#this code is similar to lecture 4a
+
+#set initial values
+NMC<-1000
+lambda <-3
+#placeholder vectors
+xbar_storage <- c()
+x_storage <-c()
+
+#create the for loop to do the NMC sim
+
+for(i in 1:NMC){
+  x_storage[i]<-rpois(1,lambda)
+  xbar_storage[i]<-mean(x_storage[1:i])
+}
+
+#create the plot
+plot(xbar_storage, type="l",
+     main="mean of xbars against lambda(red line)",
+     xlab="samples",
+     ylab="mean of xbars")
+abline(h=lambda,col="red")
+
+##problem 2
+#show that sample variance is also consistent
+#with lambda 
+#overlay the two graphs
+
+#similar set up to problem 1
+#same MNC
+#same lambda
+s_storage <- c() #this is still an x storage i just wanted a new one
+s2_storage <- c()
+
+#run the for loop to generate data
+#instead of working with sample mean we want sample variance
+
+for(i in 1:NMC){
+  s_storage[i] <-rpois(1,lambda)
+  s2_storage[i] <-var(s_storage[1:i])
+}
+
+#now that we have the data we need to plot it against the expected value of lambda
+
+plot(s2_storage, type="l",
+     main="var of sample variances against lambda(red line)",
+     xlab="samples",
+     ylab="mean of s2")
+abline(h=lambda,col="red")
+
+
+#we need to put the two plots in the same graph
+plot(xbar_storage, type="l",
+     main="mean of xbars and var of sample variances\nagainst lambda(red line)",
+     xlab="samples",
+     ylab="mean(blue); var(green)",
+     col="blue")
+abline(h=lambda,col="red")
+lines(s2_storage, type="l", col="green")
+
+#they both converge at lambda (red line)
+#the blue line, representing the sample means, steadys out near the truth more quickly, indicating that the sample means converge to the truth more quickly
+
+
+##problem 3
+#similar to problems 1 and 2, but we will need to set up a new dist
+#for the second consistency, it will be sample variance ÷ 2
+
+#set initial values and placeholder vectors for the for loops
+#we can use the same NMC
+k<-5
+xbar_storage3<-c()
+x_storage3<-c()
+s_storage3<-c()
+s2_storage3<- c()
+
+#here we need to change the estimator because s2 is biased for k
+s_adjusted_storage <- c()
+
+
+#create a for loop to generate data for the xbars
+for(i in 1:NMC){
+  x_storage3[i]<-rchisq(1,k)
+  xbar_storage3[i]<-mean(x_storage3[1:i])
+}
+
+#create the plot for the xbars
+plot(xbar_storage3, type="l",
+     main="mean of xbars against k(red line)",
+     xlab="samples",
+     ylab="mean of xbars")
+abline(h=k,col="red")
+
+#this plot is sufficient to show that xbar is consistent for k:
+#converges to k and varies less around k
+
+#create a for loop to generate data for the adjusted s^2
+for(i in 1:NMC){
+  s_storage3[i]<-rchisq(1,k)
+  s2_storage3[i]<-var(x_storage3[1:i])
+  s_adjusted_storage[i]<-s2_storage3[i]/2
+}
+
+#create a plot for the adjusted variances
+plot(s_adjusted_storage, type="l",
+     main="var of adjusted sample variances against k(red line)",
+     xlab="samples",
+     ylab="var of adjusted variances")
+abline(h=k,col="red")
+
+#this one is trending to convergence but it is taking much longer to do so
+#this is what we expect from this estimator
+
+
+##problem 4
+#we are showing consistency again
+#this time with an exponential distribution
+#we will have to adjust the sample mean and show consistency
+
+#set initial values and placeholder vectors for the for loops
+#we can use the same NMC
+lambda4<-4
+x_storage4 <-c()
+xbar_storage4<-c()
+xbar_storage_adjusted <-c()
+
+
+#we have to generate the data from the exponential distribution
+for(i in 1:NMC){
+  x_storage4[i]<-rexp(1,lambda4)
+  xbar_storage4[i]<-mean(x_storage4[1:i])
+  xbar_storage_adjusted[i]<-(xbar_storage4[i]^(-1))
+}
+
+#create a plot for the adjusted xbars
+plot(xbar_storage_adjusted, type="l",
+     main="mean of adjusted xbars against lambda(red line)",
+     xlab="samples",
+     ylab="mean of adjusted xbars")
+abline(h=lambda4,col="red")
+
+#this graph is not converging at 4: I just had a simple typo that Dalton helped me fix
+
+#the major goal of this lab was to illustrate the concept of consistency: 
+#as n increases the estimator will converge to the truth, and it will vary less
+#this decreasing variation looks like the graph is smoothing out
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+
+

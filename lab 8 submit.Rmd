@@ -1,0 +1,154 @@
+---
+title: "lab 8 submit"
+author: "Joe Seifert"
+date: "3/5/2021"
+output: pdf_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#1a
+$(2\pi\sigma^2)^{\frac{-n}{2}}\cdot e^{\frac{1}{2\sigma^2}\cdot\sum_{i=1}^n(x_i-\mu)^2}$
+#given sigma^2=1
+$(2\pi)^{\frac{-n}{2}}\cdot e^{\frac{-1}{2}\cdot\sum_{i=1}^n(x_i-\mu)^2}$
+```{r}
+#problem 1b
+#same distribution
+sigma <- 1
+#likelihood function
+L_Normal <- function(data,mu){
+  n<- length(data)
+  y<- ((1/sqrt(2*pi*sigma))^n)*exp(-.5*sum((data-mu)^2))
+  return(y)
+}
+
+#problem 1c
+#find the mean of the sample data
+frogs <-c(4.87, 3.89, 6.16, 1.79, 5.84, 4.00, 3.25, 3.68, 4.36, 4.14, 5.14, 3.61)
+xbar<-mean(frogs)
+print(xbar)
+
+#problem 1d
+#plot likelihood function of this data set
+#over the mu domain [0,7]
+
+mu_domain <- seq(from=0, to=7, by=.05)
+plot(mu_domain, sapply(mu_domain,L_Normal,data=frogs),
+    xlab="mu",
+    ylab="L(mu|X,sigma)",
+    main="Normal Likelihood of Frog Weights",
+    type="l",
+    lwd=2)
+
+#problem 1e
+#we have proven that xbar is the MLE estimator for mu
+#now we want the max of the graph using computer science
+Normal_MLE <- function(mu){
+  sapply(mu,L_Normal,data=frogs)
+}
+
+optimize(f=Normal_MLE,interval=c(0,7), maximum=TRUE)
+#the value after $maximum is our MLE estimator,
+# which is equal to xbar in this case
+```
+#2a
+$f(x|\lambda)=\lambda\cdot e^{-\lambda x}$
+$l(\lambda|X)=\prod_{i=1}^n(\lambda\cdot e^{-\lambda x_i})$
+$=\lambda^n\cdot \prod_{i=1}^n(e^{-\lambda\cdot x_i})$
+$=\lambda^n\cdot e^{\sum_{i=1}^n(-\lambda\cdot x)}$
+$=\lambda^n\cdot e^{-\lambda\cdot n\cdot\sum_{i=1}^n(x)}$
+```{r}
+#Problem 2
+#similar to problem 1, but with the exponential distribution
+
+#2b
+#code the likelihood function in here in the same way as
+# problem 1b
+
+lambda <- c()
+#likelihood function
+L_Exponential <- function(data,lambda){
+  n<- length(data)
+  y<- lambda^n*exp(-lambda*n*sum(data))
+  return(y)
+}
+
+
+
+#2c
+#again, we want to find the mean of the sample data
+mercury <- c(0.20, 0.20, 0.14, 0.07, 0.03, 0.07, 0.12, 0.01, 0.54, 0.23, 0.06, 1.19, 0.50, 0.07, 0.24, 0.42)
+xbar<- mean(mercury)
+print(xbar)
+
+#2d
+#plot the likelihood function of exponential data set
+# domain lambda [0,10]
+
+lambda_domain <- seq(from=0, to=10, by=.05)
+plot(lambda_domain, sapply(lambda_domain,L_Exponential,data=mercury),
+    xlab="Lambda",
+    ylab="L(Lambda|X)",
+    main="Normal Likelihood of Mercury Concentration",
+    type="l",
+    lwd=2)
+
+
+#2e
+#use optimize to find the most likely lambda value 
+
+Exponential_MLE <- function(lambda){
+  sapply(lambda,L_Exponential,data=mercury)
+}
+
+optimize(f=Exponential_MLE,interval=c(0,10), maximum=TRUE)
+
+```
+#3a
+$f(x|p)=p^x(1-p)^{1-x}$
+$L(p|X)=\prod_{i=1}^n(p^{x_i}\cdot(1-p)^{1-x_i})$
+$=p^{\sum_{i=1}^n(x_i)}\cdot(1-p)^{\sum_{i=1}^n(1-x_i)}$
+$=p^{\sum_{i=1}^n(x_i)}\cdot(1-p)^{n-\sum_{i=1}^n(x_i)}$
+```{r}
+#problem 3
+#this is not divided into a-e but it will be easier for me
+# to review if it is divided that way
+#3b
+#code the likelihood function into r
+
+p <- c()
+#likelihood function
+L_Bernoulli <- function(data,p){
+  n<- length(data)
+  y<- (p^sum(data))*((1-p)^(n-sum(data)))
+  return(y)
+}
+
+#3c
+#find the mean of the data set
+river<-c(1,1,1,1,1,1,1,1,1,0,1,1,1,0,1,1,0,0,1,1,0,1,1,1,1,1,1,1,0,1)
+#safe=1
+#flood=0
+xbar<-mean(river)
+print(xbar)
+
+#3d
+#plot the likelihood function
+
+p_domain <- seq(from=0, to=1, by=.005)
+plot(p_domain, sapply(p_domain,L_Bernoulli,data=river),
+    xlab="p",
+    ylab="L(p|X)",
+    main="Normal Likelihood of Monthly Floods",
+    type="l",
+    lwd=2)
+
+#3e
+# use optimize to find the most likely parameter based on the
+# data
+Bernoulli_MLE <- function(p){
+  sapply(p,L_Bernoulli,data=river)
+}
+
+optimize(f=Bernoulli_MLE,interval=c(0,1), maximum=TRUE)
+```

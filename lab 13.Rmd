@@ -1,0 +1,215 @@
+---
+title: "lab 13"
+author: "Joe Seifert"
+date: "4/9/2021"
+output: pdf_document
+---
+
+```{r}
+#guided problem 1
+#alpha is the probability of a type I error
+#we can either reject the null or fail to reject it
+#alpha is the proportion of the time we reject the null when we should not (the null hypothesis is true)
+#type II error is denoted by beta
+
+#part a
+# we investigate type error
+ci_maker_mu <- function(n,mu,sigma,alpha){
+  x <- rnorm(n,mu,sigma)
+  xbar <- mean(x)
+  s <- sd(x)
+  LL <- xbar - qt(1-alpha/2,n-1)*s/sqrt(n)
+  UL <- xbar + qt(1-alpha/2,n-1)*s/sqrt(n)
+  return(LL<mu & UL>mu)
+}
+
+NMC <- 10000
+
+test005 <- replicate(NMC, ci_maker_mu(20,13,5,0.005))
+mean(test005)
+
+test01 <- replicate(NMC, ci_maker_mu(20,13,5,0.01))
+mean(test01)
+
+test05 <- replicate(NMC, ci_maker_mu(20,13,5,0.05))
+mean(test05)
+
+#these numbers will not always be exact because there is some randomness with monte carlo,
+# but it will be close
+
+#the type 1 error = alpha
+
+#type 1 error for alpha = 0.005
+type1error005 <- 1-mean(test005)
+type1error005
+0.005# this is what the error should be
+
+#type 1 error for alpha = 0.01
+type1error005 <- 1-mean(test01)
+type1error005
+0.01# this is what the error should be
+
+#type 1 error for alpha = 0.05
+type1error005 <- 1-mean(test05)
+type1error005
+0.05# this is what the error should be
+
+#part b
+set.seed(0618)
+#similar to the example at the end of lecture 12A
+library(DescTools)
+alpha <- .005
+type1_simulator <- function(n,mu,sigma,alpha){
+  x <- rnorm(n,mu,sigma)
+  out <- VarTest(x,alternative="less", sigma.squared=25, conf.level=1-alpha)
+  CI <- out$conf.int#tells R that we just want the CI from VarTest
+  return(sigma^2 < CI[2])
+}
+
+NMC <- 10000
+coverage <- replicate(NMC,type1_simulator(20,13,5,alpha))
+mean(coverage)
+#type I error rate
+1-mean(coverage)
+
+alpha <- .01
+type1_simulator <- function(n,mu,sigma,alpha){
+  x <- rnorm(n,mu,sigma)
+  out <- VarTest(x,alternative="less", sigma.squared=25, conf.level=1-alpha)
+  CI <- out$conf.int
+  return(sigma^2 < CI[2])
+}
+coverage <- replicate(NMC,type1_simulator(20,13,5,alpha))
+mean(coverage)
+#type I error rate
+1-mean(coverage)
+
+alpha <- .05
+type1_simulator <- function(n,mu,sigma,alpha){
+  x <- rnorm(n,mu,sigma)
+  out <- VarTest(x,alternative="less", sigma.squared=25, conf.level=1-alpha)
+  CI <- out$conf.int
+  return(sigma^2 < CI[2])
+}
+coverage <- replicate(NMC,type1_simulator(20,13,5,alpha))
+mean(coverage)
+#type I error rate
+1-mean(coverage)
+
+
+
+#problem 2
+#part a
+alpha <- .005
+n <- 20
+mu <- 13
+sigma <- 5
+P_storage <- c()
+
+for(i in 1:NMC){
+  x <- rnorm(n,mu,sigma)
+  out <- VarTest(x,alternative="less", sigma.squared=(sigma^2), conf.level=1-alpha)
+  P_val <- out$p.value#tells R that we just want the p-value from VarTest
+  P_storage[i] <- P_val
+}
+hist(P_storage,
+     main="hist. of montecarlo-generated p-values",
+     xlab="p",
+     ylab="freq.")
+
+#there does not seem to be a specific distribution to the p-values
+# (except maybe uniform) as they are spread out almost evenly
+# from 0 to 1
+
+#part b
+#this part will require me to run some more samples with different alpha levels but the idea is the same
+
+#at the alpha = 0.005 level
+mean(P_storage < alpha)
+#this is the proportion of p-values that are below alpha. 
+#this is approximately equal to the type I error rate
+
+alpha <- .01
+for(i in 1:NMC){
+  x <- rnorm(n,mu,sigma)
+  out <- VarTest(x,alternative="less", sigma.squared=(sigma^2), conf.level=1-alpha)
+  P_val <- out$p.value#tells R that we just want the p-value from VarTest
+  P_storage[i] <- P_val
+}
+mean(P_storage < alpha)
+
+alpha <- .05
+for(i in 1:NMC){
+  x <- rnorm(n,mu,sigma)
+  out <- VarTest(x,alternative="less", sigma.squared=(sigma^2), conf.level=1-alpha)
+  P_val <- out$p.value#tells R that we just want the p-value from VarTest
+  P_storage[i] <- P_val
+}
+mean(P_storage < alpha)
+
+#part c
+#we do not need an alpha here because we are just looking for p-values
+#but it is good practice to have a desired conf.level
+#so that you can reject or fail to reject the null
+alpha <- 0.05
+
+for(i in 1:NMC){
+  A <- rnorm(20,19,20)
+  B <- rnorm(20,-37,10)
+  out <- var.test(A,B,ratio=2^2, alternative="less",conf.level=1-alpha)
+  P_val <- out$p.value
+  P_storage[i] <- P_val
+}
+hist(P_storage)
+mean(P_storage < alpha)
+
+#part d
+#similar to what we did in part b
+
+alpha <- 0.05
+
+for(i in 1:NMC){
+  A <- rnorm(20,19,20)
+  B <- rnorm(20,-37,10)
+  out <- VarTest(A,B,alternative="less", ratio=4, conf.level=1-alpha)
+  P_val <- out$p.value
+  P_storage[i] <- P_val
+}
+mean(P_storage < alpha)
+
+
+alpha <- 0.01
+
+for(i in 1:NMC){
+  A <- rnorm(20,19,20)
+  B <- rnorm(20,-37,10)
+  out <- VarTest(A,B,alternative="less", ratio=4, conf.level=1-alpha)
+  P_val <- out$p.value
+  P_storage[i] <- P_val
+}
+mean(P_storage < alpha)
+
+
+alpha <- 0.005
+
+for(i in 1:NMC){
+  A <- rnorm(20,19,20)
+  B <- rnorm(20,-37,10)
+  out <- VarTest(A,B,alternative="less", ratio=4, conf.level=1-alpha)
+  P_val <- out$p.value
+  P_storage[i] <- P_val
+}
+mean(P_storage < alpha)
+
+#based on this, the p-value is
+# less than the type I error rate
+
+#
+var.test(A,B,alternative="less", ratio=4, conf.level=1-alpha)
+VarTest(A,B,alternative="less", ratio=4, conf.level=1-alpha)
+#looks like these tests return the exct same thing
+
+
+
+```
+

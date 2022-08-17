@@ -1,0 +1,159 @@
+---
+title: "lab 10"
+author: "Joe Seifert"
+date: "3/19/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#guided problem 1
+#Goal: illustrate the coverage of a
+# paired difference confidence interval
+
+#we do not need these to illustrate this point
+#sigma     <- 10
+#mu_before <- 200
+#mu_after  <- 190
+
+
+ci_paired <- function(n, mu_before, mu_after, sigma, alpha){
+  before <- rnorm(n, mu_before, sigma)
+  after <- rnorm(n, mu_after, sigma)
+  deltas <- after - before
+  xbar <- mean(deltas)
+  s <- sd(deltas)
+  tstar <- qt(1-alpha/2, n-1)
+  LL <- xbar - tstar*s/sqrt(n)
+  UL <- xbar + tstar*s/sqrt(n)
+  mu_delta <- mu_after - mu_before
+  coverage <- LL<mu_delta & UL>mu_delta
+  return(coverage)
+}
+
+NMC <- 10000
+out <- replicate(NMC, ci_paired(30,200,190,10,0.05))
+table(out)/NMC
+# since we did not set a seed, the before and after data generation will be different
+
+#coverage falters when you switch from a t dist
+#which is robust to non-normality
+# to a normal distribution
+```
+
+```{r}
+#problem 2
+# part a
+n <- c(5, 15, 25, 35)
+mu <- 10
+sigma <- 3
+NMC <- 5000
+
+out <- c()
+
+data <- function(n){
+  x <- rnorm(n,mu,sigma)
+  s2 <-var(x)
+  return(s2)
+}
+
+out1 <- replicate(NMC, data(n[1]))
+hist(out1)
+
+out2 <- replicate(NMC, data(n[2]))
+hist(out2)
+
+out3 <- replicate(NMC, data(n[3]))
+hist(out3)
+
+out4 <- replicate(NMC, data(n[4]))
+hist(out4)
+
+# since there is a large weight to the left of the mean
+# this data looks to be distributed in the
+# chi-squared distribution
+
+
+#part b
+n <- c(5,15,25,35)
+mu <- 10
+sigma <- 3
+NMC <- 5000
+
+out <- c()
+
+data <- function(n){
+  x <- rnorm(n,mu,sigma)
+  s2 <- var(x)
+  statistic <-((n-1)*s2)/(sigma^2)
+  return(statistic)
+}
+
+out1 <- replicate(NMC, data(n[1]))
+hist(out1)
+
+out2 <- replicate(NMC, data(n[2]))
+hist(out2)
+
+out3 <- replicate(NMC, data(n[3]))
+hist(out3)
+
+out4 <- replicate(NMC, data(n[4]))
+hist(out4)
+
+#this distribution looks similar to the last,
+# with a large concentration to the left of
+# the mean; therefore, I would speculate
+# that this is another chi-squared distribution
+```
+
+```{r}
+#problem 3
+n <- c(5,15,25,35)
+mu_A <- 10
+mu_B <- 100
+sigma_A <- 3
+sigma_B <- 7
+NMC <- 5000
+
+out <- c()
+
+data <- function(n){
+  X_A <- rnorm(n, mu_A, sigma_A)
+  X_B <- rnorm(n, mu_B, sigma_B)
+  s2_A <- var(X_A)
+  s2_B <- var(X_B)
+  statistic <- s2_A / s2_B
+  return(statistic)
+}
+
+out1 <- replicate(NMC, data(n[1]))
+hist(out1)
+
+out2 <- replicate(NMC, data(n[2]))
+hist(out2)
+
+out3 <- replicate(NMC, data(n[3]))
+hist(out3)
+
+out4 <- replicate(NMC, data(n[4]))
+hist(out4)
+
+#this statistic appears to follow a similar distribution to the previous two
+# I speculate a chi-squared distribution
+```
+
+
+
+
+
+
+
+
+
+
+
+

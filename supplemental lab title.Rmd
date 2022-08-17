@@ -1,0 +1,532 @@
+---
+title: "lab 9 supplemental"
+author: "Joe Seifert"
+date: "3/12/2021"
+output: pdf_document
+---
+```{r}
+#problem 1
+#a and b are on Ipad written PDF
+#1c
+set.seed(0619)
+#setting initial values
+k <- 7
+n <- 50
+NMC <- 50000
+alpha <- 0.09
+coverage <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage[i] <- LL<k & UL>k
+}
+mean(coverage)
+#our desired coverage in this case is 91%
+#our actual coverage rate is 0.9103 or 91.03%
+#the CLT applies properly in this context (verified)
+
+#1d
+#altering values of k
+k <- 7
+n <- 50
+NMC <- 50000
+alpha <- 0.09
+coverage <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage[i] <- LL<k & UL>k
+}
+mean(coverage)
+###############
+k <- 2
+n <- 50
+NMC <- 50000
+alpha <- 0.09
+coverage_1 <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_1[i] <- LL<k & UL>k
+}
+mean(coverage_1)
+###############
+k <- 4
+n <- 50
+NMC <- 50000
+alpha <- 0.09
+coverage_2 <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_2[i] <- LL<k & UL>k
+}
+mean(coverage_2)
+###############
+k <- 20
+n <- 50
+NMC <- 50000
+alpha <- 0.09
+coverage_3 <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_3[i] <- LL<k & UL>k
+}
+mean(coverage_3)
+
+mean(coverage)
+mean(coverage_1)
+mean(coverage_2)
+mean(coverage_3)
+#these values are all close, indicating
+# that the value of k does not affect
+# the coverage of the confidence interval
+
+#changing the values of n
+###############
+k <- 7
+n <- 50
+NMC <- 50000
+alpha <- 0.09
+coverage <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage[i] <- LL<k & UL>k
+}
+mean(coverage)
+###############
+k <- 7
+n <- 2
+NMC <- 50000
+alpha <- 0.09
+coverage_1 <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_1[i] <- LL<k & UL>k
+}
+mean(coverage_1)
+###############
+k <- 7
+n <- 4
+NMC <- 50000
+alpha <- 0.09
+coverage_2 <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_2[i] <- LL<k & UL>k
+}
+mean(coverage_2)
+###############
+k <- 7
+n <- 300
+NMC <- 50000
+alpha <- 0.09
+coverage_3 <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_3[i] <- LL<k & UL>k
+}
+
+mean(coverage)
+mean(coverage_1)
+mean(coverage_2)
+mean(coverage_3)
+#when n is greater than 30 we will have approximate satisfaction
+#when n is < 30 our coverage may not be sufficient
+
+
+#changing values of alpha
+###############
+k <- 7
+n <- 50
+NMC <- 50000
+alpha <- 0.09
+coverage <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage[i] <- LL<k & UL>k
+}
+mean(coverage)
+###############
+k <- 7
+n <- 50
+NMC <- 50000
+alpha <- 0.05
+coverage_1 <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_1[i] <- LL<k & UL>k
+}
+mean(coverage_1)
+
+#coverage is roughly 1-alpha
+
+###############
+k <- 7
+n <- 50
+NMC <- 50000
+alpha <- 0.01
+coverage_2 <- c()
+
+for(i in 1:NMC){
+  x <- rchisq(n,k)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_2[i] <- LL<k & UL>k
+}
+mean(coverage_2)
+
+mean(coverage)
+mean(coverage_1)
+mean(coverage_2)
+
+## summary
+#the value of k does not affect the coverage
+#as long as n >= 30 the coverage should approximately = 1-alpha
+#alpha determines how wide the confidence level is
+#higher alpha means lower confidence level
+
+
+#problem 2
+#2c
+theta <- 10
+n <- 500
+NMC <- 50000
+alpha <- 0.05
+coverage <- c()
+
+for(i in 1:NMC){
+  x <- runif(n,0,theta)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage[i] <- LL<theta/2 & UL>theta/2
+}
+mean(coverage)
+
+#the coverage there is actually above our goal of 0.95
+# at 0.96
+
+#2d
+#changing theta
+#####
+theta <- 10
+n <- 500
+NMC <- 50000
+alpha <- 0.05
+coverage <- c()
+
+for(i in 1:NMC){
+  x <- runif(n,0,theta)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage[i] <- LL<theta/2 & UL>theta/2
+}
+#####
+theta <- 2
+n <- 500
+NMC <- 50000
+alpha <- 0.05
+coverage_1 <- c()
+
+for(i in 1:NMC){
+  x <- runif(n,0,theta)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_1[i] <- LL<theta/2 & UL>theta/2
+}
+theta <- 50
+n <- 500
+NMC <- 50000
+alpha <- 0.05
+coverage_2 <- c()
+
+for(i in 1:NMC){
+  x <- runif(n,0,theta)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_2[i] <- LL<theta/2 & UL>theta/2
+}
+
+mean(coverage) #0.96788
+mean(coverage_1) #0.99998
+mean(coverage_2) #0.66098
+#lowering our theta made our coverage much higher in this case
+#raising our theta made our coverage much lower
+
+#changing n
+#####
+theta <- 10
+n <- 500
+NMC <- 50000
+alpha <- 0.05
+coverage <- c()
+
+for(i in 1:NMC){
+  x <- runif(n,0,theta)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage[i] <- LL<theta/2 & UL>theta/2
+}
+#####
+theta <- 10
+n <- 50
+NMC <- 50000
+alpha <- 0.05
+coverage_1 <- c()
+
+for(i in 1:NMC){
+  x <- runif(n,0,theta)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_1[i] <- LL<theta/2 & UL>theta/2
+}
+theta <- 10
+n <- 5000
+NMC <- 50000
+alpha <- 0.05
+coverage_2 <- c()
+
+for(i in 1:NMC){
+  x <- runif(n,0,theta)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_2[i] <- LL<theta/2 & UL>theta/2
+}
+
+mean(coverage) #0.96882
+mean(coverage_1) #0.96554
+mean(coverage_2) #0.96768
+#each of these satisfies our desired level of coverage
+# they are all above 30, lets try one less than 30
+# less than 30 might not satisfy our desired coverage 
+theta <- 10
+n <- 5
+NMC <- 50000
+alpha <- 0.05
+coverage_low <- c()
+
+for(i in 1:NMC){
+  x <- runif(n,0,theta)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_low[i] <- LL<theta/2 & UL>theta/2
+}
+
+mean(coverage_low)#0.94672
+#this one is only slightly below our desired coverage
+
+#changing alpha
+#####
+theta <- 10
+n <- 500
+NMC <- 50000
+alpha <- 0.05
+coverage <- c()
+
+for(i in 1:NMC){
+  x <- runif(n,0,theta)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage[i] <- LL<theta/2 & UL>theta/2
+}
+#####
+theta <- 10
+n <- 500
+NMC <- 50000
+alpha <- 0.01
+coverage_1 <- c()
+
+for(i in 1:NMC){
+  x <- runif(n,0,theta)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_1[i] <- LL<theta/2 & UL>theta/2
+}
+theta <- 10
+n <- 500
+NMC <- 50000
+alpha <- 0.10
+coverage_2 <- c()
+
+for(i in 1:NMC){
+  x <- runif(n,0,theta)
+  mu_hat <- mean(x)
+  zstar <- qnorm(1-alpha/2)
+  LL <- mu_hat - zstar*sqrt(2*mu_hat)/sqrt(n)
+  UL <- mu_hat + zstar*sqrt(2*mu_hat)/sqrt(n)
+  coverage_2[i] <- LL<theta/2 & UL>theta/2
+}
+
+mean(coverage) #0.96768
+mean(coverage_1) #0.99476
+mean(coverage_2) #0.92736
+#changing alpha changes our desired coverage
+# so each of these is adequate
+
+
+#problem 3
+#assess the t distribution and look at whether
+# or not it appears to be normal
+
+#set variables
+mu <- 80
+sigma_x <- 5
+n <-2 #this we will change through the course of the problem
+# use same NMC as earlier
+value <- c()
+
+for(i in 1:NMC){
+  x<- rnorm(n,mu,sigma_x)
+  xbar<-mean(x)
+  s<- sd(x)
+  value[i] <- (xbar-mu)/(s/sqrt(n))
+}
+hist(value,main="n=2")
+# this one is not normal at all
+#only two values have significant frequency
+
+
+n <-6
+value <- c()
+
+for(i in 1:NMC){
+  x<- rnorm(n,mu,sigma_x)
+  xbar<-mean(x)
+  s<- sd(x)
+  value[i] <- (xbar-mu)/(s/sqrt(n))
+}
+hist(value,main="n=6")
+# this one is more normal than the last,
+# but too much frequency near the center and it has
+# >0 probability beyond 3
+
+
+n <-17
+value <- c()
+
+for(i in 1:NMC){
+  x<- rnorm(n,mu,sigma_x)
+  xbar<-mean(x)
+  s<- sd(x)
+  value[i] <- (xbar-mu)/(s/sqrt(n))
+}
+hist(value,main="n=17")
+# similar to the last histogram
+# this one is more normal than the last,
+# but too much frequency near the center and it has
+# >0 probability beyond 3
+
+
+n <-38
+value <- c()
+
+for(i in 1:NMC){
+  x<- rnorm(n,mu,sigma_x)
+  xbar<-mean(x)
+  s<- sd(x)
+  value[i] <- (xbar-mu)/(s/sqrt(n))
+}
+hist(value,main="n=38")
+#follows progression trending towards normal as n approaches 30,
+# this one is approximately normal
+# but too much frequency near the center and it has
+# >0 probability beyond 3
+
+
+n <-500
+value <- c()
+
+for(i in 1:NMC){
+  x<- rnorm(n,mu,sigma_x)
+  xbar<-mean(x)
+  s<- sd(x)
+  value[i] <- (xbar-mu)/(s/sqrt(n))
+}
+hist(value,main="n=500")
+#follows progression trending towards normal as n approaches 30,
+# this one is approximately normal
+# but too much frequency near the center and it has
+# >0 probability beyond 3
+
+#though the t distribution approaches normality,
+# it does not completely conform to the dist
+
+
+
+
+
+```
+

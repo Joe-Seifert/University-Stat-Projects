@@ -1,0 +1,136 @@
+---
+title: "lab 15"
+author: "Joe Seifert"
+date: "4/24/2021"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r}
+# review 1
+
+#a
+# consistency: there is an "n" for which the estimator
+# will match the parameter.
+
+#convergence to the truth and low variability --> 
+# --> increasingly so as n increases
+
+# it is often easiest to show that
+# 1: theta hat is unbiased for theta
+    # E(theta-hat) = theta
+#2: limit as n goes to infinity of variance of theta is 0
+# discussed in week 4
+
+#b 
+# H0: µ = 20
+# HA: µ ≠ 20
+
+pvalues <- c()
+pvalues[1] <- 1
+x <- rnorm(1,19,3)
+alpha <- 0.01
+n <- 20000
+
+for(i in 2:n){
+  x[i] <- rnorm(1,19,3)
+  out <- t.test(x[1:i], mu=20, alternative="less",
+                conf.level=1-alpha)
+  pvalues[i] <- out$p.value
+}
+plot(pvalues, type="l") 
+#this looks to be approaching 0
+# with very little variability
+
+
+#review 2
+bacteria <- c(8.84,1.97,11.06,8.42,13.91,
+              139.34,57.44,12.96,345.36,
+              18.36,22.75,112.79,40.72,
+              3.42,30.4,159.62,13.08,0.8,
+              16.09,4.24,65.57,0.46,26.25,
+              0.26,40.61,35.62,13.35,3.09,
+              0.61,169.92,73.75,9.83,36.03,
+              6.55,3.01,201.88,424.68,0.92,
+              5.55,7.47,1.77,107.22,580.39,
+              2.07,182.48,6.04,55.17,22.47,
+              34.5,17.72,56.91,4.53,3.52,
+              2.11,1083.5,39.62,150.3,4.14,
+              1.7,3.61,1.86,160.22,3.56,2.85,
+              51.34,93.2,30.88,0.76,1.14,
+              4.68,4.48,138.21,31.21,1.54,
+              6.77,24.9,10.59,51.9,102.88,4.58)
+
+#a
+hist(bacteria)
+# this data is not even close to normal
+# there is a huge concentration between 0 and 200, with 
+# very little data outside of that bound 
+
+#b
+out <- t.test(bacteria, conf.level=0.99, mu=30)
+out$conf.int
+
+#c
+#bootstrapping!
+#covered in week 11
+
+B <- 10000
+xbars <- c()
+alpha <- 0.01 #already have this somewhere but its good practice to put here
+
+for(b in 1:B){
+  x <- sample(bacteria, size=length(bacteria), replace=TRUE)
+  xbars[b] <- mean(x)
+}
+quantile(xbars, c(alpha/2, 1-alpha/2))
+# answer is slightly different from Dalton's
+# this is due to randomness in the sampling
+
+#d
+#since 30 is not contained in this CI, reject the null hypothesis
+# at a 0.01 significance level
+
+#based on part b, we would fail to reject the null hypothesis at
+# the same significance level
+
+
+
+#review 3
+# CLT and T-dist
+
+n <- c(4,8,12,30,100)
+
+t_illustrator <- function(n){
+  x <- rnorm(n,10,1)
+  return((mean(x)-10)/(sd(x)/sqrt(n)))
+}
+z_illustrator <- function(n){
+  x <- rnorm(n,10,1)
+  return((mean(x)-10)/(1/sqrt(n)))
+}
+
+hist(replicate(10000,t_illustrator(n[1])))
+hist(replicate(10000,t_illustrator(n[2])))
+hist(replicate(10000,t_illustrator(n[3])))
+hist(replicate(10000,t_illustrator(n[4])))
+hist(replicate(10000,t_illustrator(n[5])))
+
+hist(replicate(10000,z_illustrator(n[1])))
+hist(replicate(10000,z_illustrator(n[2])))
+hist(replicate(10000,z_illustrator(n[3])))
+hist(replicate(10000,z_illustrator(n[4])))
+# this is where we achieve approximate normality (n=30)
+# this may not always be the case, but it is often true that n=30
+# is the minimum threashold for approximate normality
+
+hist(replicate(10000,z_illustrator(n[5])))
+# from the beginning we have approximate normality here;
+# this is because our variance is 1
+
+#z is used when sigma is known, and t is used when sigma is unknown
+# they are used in different situations, so both are important
+# to know depending on the situation you are in
+
+```

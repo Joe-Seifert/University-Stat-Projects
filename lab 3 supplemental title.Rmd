@@ -1,0 +1,249 @@
+---
+title: "lab 3 supplemental title"
+author: "Joe Seifert"
+date: "1/26/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#Guided Example Part A
+#set up the for loop
+n<-4
+lambda<-12
+xbar_storage<-c()#placeholder vector where forloop samples are stored
+NMC<-50000
+
+set.seed(610)
+#actually running the for loop
+for(i in 1:NMC){
+  temp_sample <-rpois(n, lambda)
+  temp_xbar <-mean(temp_sample)
+  xbar_storage[i] <- temp_xbar
+}
+#use the help window, type in any function and it tells you the arguments required
+
+#plotting a histogram
+hist(xbar_storage,
+     main="histogram of sample means of poisson dist.",
+     col="darkred",
+     xlab="sample mean value"
+)
+#looks approx. normal
+
+#find mean and variance of xbar storage
+
+mean_xbar_storage <- mean(xbar_storage)
+variance_xbar_storage <- var(xbar_storage)
+
+mean_xbar_storage #12.00465
+variance_xbar_storage #2.994444
+#variance is a lot lower than the mean, this is what we expect from the CLT
+
+#############################################
+set.seed(610)
+#Guided Example Part B
+#using replicate
+#doing the same process using a different function
+
+#setting up initial values (assigning variables)
+n<-25
+a<-0
+b<-4
+NMC<-50000
+
+#creating function
+lab3problem2<-function(n,a,b){
+  temp_sample<-runif(n,a,b) #generate from uniform dist
+  temp_xbar<-mean(temp_sample)
+  return(temp_xbar)#each time this runs it will output the temp_xbar value
+}
+
+
+#functions for uniform distribution
+#mean = (a+b)/2
+#variance = [(b-a)^2]/12
+
+l3p2_mean <-(a+b)/2
+l3p2_mean#2
+
+l3p2_var <-((b-a)^2)/12
+l3p2_var#4/3
+
+#step 2: where our NMC comes into play
+xbar_storage <-replicate(NMC,lab3problem2(n,a,b))#replicate NMC (50,000) times on the function lab3problem2
+
+hist(xbar_storage,
+     main="histogram of sample means of uniform dist.",
+     col="darkred",
+     xlab="sample mean value"
+)
+
+#mean and variance of xbar
+mean(xbar_storage)#1.998721: close to our sampling distribution mathematical mean of 2
+var(xbar_storage)#0.05352817: much smaller, not really that close to the sampling distribution mathematical mean of 4/3
+
+
+
+
+
+
+###################
+#part c
+#the means are almost the same, so you can use the approximation mean of your sample as the distribution mean 
+#variance of actual deviation / number of samples that you have will give you your approximate mean based on the CLT sample
+
+
+
+
+#problem 2: we are repeating problem 1 with a chisq distribuiton
+
+#2a
+#here is where we declare the variables
+#sample size (arguments for the chisq distribution function)
+n<-4
+df<-12
+#compute and store sample mean
+xbar_storage <- c()
+#repeat this a large number of times (use the NMC variable)
+NMC<-50000
+for(i in 1:NMC){
+  temp_sample<-rchisq(n,df) #find the distribution
+  temp_xbar<-mean(temp_sample)#find the mean of the distribution
+  xbar_storage[i]<-temp_xbar#store the mean of each of the iterations of the distribution
+}
+#plot using hist
+hist(xbar_storage,
+     main="histogram of sample means of chisq dist.",
+     col="darkred",
+     xlab="sample mean value"
+)#plot a histogram of the means of the distribution
+
+#compute the mean and variance of sampling distribution of xbar and relate them back to the sampling distribution of the original sampling distribution
+mean(xbar_storage)#12.00332
+var(xbar_storage)#6.016282
+
+#mean = df
+#variance = 2*df
+
+#mean = 12
+#variance = 12*2 = 24
+
+#again, we see that the mean of the xbars is a good approximation of the mean of the chi squared distribution with n=4, df=12
+#we also see that the variance of xbars is significantly smaller than the variance of the chi squared distribution. actually dividing the variance of the distribution (24) by n (4) gives us the variance of the xbars --> 24 ÷ 4 = 6
+
+
+
+
+
+
+#problem 3
+
+#sample size (arguments for the poisson distribution function)
+n<-4
+lambda<-12
+#compute and store sample mean
+xbar_storage <- c()
+#compute and store the sample variance
+xvar_storage <-c()
+#repeat this a large number of times (use the NMC variable)
+NMC<-50000
+for(i in 1:NMC){
+  temp_sample<-rpois(n,lambda) 
+  temp_xbar<-mean(temp_sample)
+  xbar_storage[i]<-temp_xbar
+  temp_xvar <-var(temp_sample)
+  xvar_storage[i] <-temp_xvar
+}
+#plot using hist MAKE PRESENTABLE
+hist(xbar_storage,
+     main="histogram of sample means of poisson dist.",
+     col="darkred",
+     xlab="sample mean value"
+)
+#the histogram of the means looks approximately normal
+hist(xvar_storage,
+     main="histogram of sample variances of poisson dist.",
+     col="darkgreen",
+     xlab="sample variance"
+)
+#the histogram of the variances is not normal at all, it has a very long tail to the right of the graph.  looks like it's frequency is almost halved for each value of xvar_storage
+
+
+#3c
+µxbar<-mean(xbar_storage)
+µxbar#12.01152
+µxbar-lambda#0.01152
+
+
+µssq<-mean(xvar_storage)
+µssq#11.959823
+µssq-lambda#-0.04017333
+
+#both of these sampling distributions seem appropriate in approximating lambda because they are both within 0.05 of lambda. The mean of xbar seems to be better because it is 0.01 from our declared lambda, while the mean of S^2 is 0.04 from lambda, which is slightly farther
+
+
+#3d
+Vxbar<-var(xbar_storage)
+Vxbar#3.001757
+Vxbar-lambda#-8.998243
+
+
+Vssq<-var(xvar_storage)
+Vssq#99.04905
+Vssq-lambda#87.04905
+
+#since the variance from Vssq (variance of s^2) is significantly higher than Vxbar (variance of xbars), we can definitively say that xbar is a better approximateor for lambda
+
+
+
+#problem 4
+#we will do a similar operation as in problem 3, but with a normal distribution, testing to see whether the mean or median of the sample distribution is a better estimator for the population average
+
+#first we have to generate a normal distribution
+n<-10
+µ<-25
+v<-5
+
+NMC<-50000
+
+xbar_storage<-c()
+xmed_storage<-c()
+
+
+for(i in 1:NMC){
+  temp_sample <-rnorm(n,µ,v)
+  temp_xbar<-mean(temp_sample)  
+  temp_med<-median(temp_sample)  
+  xbar_storage[i]<-temp_xbar
+  xmed_storage[i]<-temp_med
+}
+
+
+hist(xbar_storage,
+     main="histogram of sample means of normal dist.",
+     col="darkred",
+     xlab="sample mean value"
+)
+hist(xmed_storage,
+     main="histogram of sample medians of normal dist.",
+     col="darkred",
+     xlab="sample median value"
+)
+#both histograms are roughly normal, meaning neither distribution is eliminated as a potential estimator so far
+
+
+mean(xbar_storage)#25.00559
+mean(xmed_storage)#25.00339
+#whichever one is closer to our population mean of 25 should be the better approximation
+#they are both super close to 25, with the median being slightly closer with a difference of only 0.003.  Based on this, I would not make a definitive statement on one being a better, less biased estimator for µ
+
+
+var(xbar_storage)#2.510933
+var(xmed_storage)#3.482215
+#the estimator with the lower variance will definitely be the better approximation because the means are so close
+#since the variance of xbar dist is lower than xmed dist xbar is a better approximation of µ, but the median is still not bad.  
+```
